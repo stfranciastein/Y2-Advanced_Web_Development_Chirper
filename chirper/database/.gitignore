@@ -1,1 +1,2 @@
-*.sqlite*
+# *.sqlite*
+# You would not comment this out in a production environment
