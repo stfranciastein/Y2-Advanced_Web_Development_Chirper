@@ -42,9 +42,18 @@
                                         <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
                                             @csrf
                                             @method('delete')
-                                            <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
                                                 {{ __('Delete') }}
-                                            </x-dropdown-link>
+                                        </x-dropdown-link>
+                                        </form>
+
+                                        <form method="POST" action="{{ route('user.follow', $user->id) }}">
+                                            @csrf
+                                            @method('put')
+                                        <x-dropdown-link :href="route('user.follow', $user->id)">
+                                            {{ _('Follow User')}}
+                                        </x-dropdown-link>
+
                                         </form>
                                     </x-slot>
                                 </x-dropdown>
