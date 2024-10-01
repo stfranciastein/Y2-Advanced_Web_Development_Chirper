@@ -16,8 +16,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('profile/{profileId}/follow', 'ProfileController@followUser')->name('user.follow');
-    Route::post('/{profileId}/unfollow', 'ProfileController@unFollowUser')->name('user.unfollow');
+    // $route->post('profile/{profileId}/follow', 'ProfileController@followUser')->name('user.follow');
+    // $route->post('/{profileId}/unfollow', 'ProfileController@unFollowUser')->name('user.unfollow');
+    Route::post('/profile/follow/{user}', [ProfileController::class, 'follow'])->name('profile.follow');
+    Route::delete('/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
+
 });
 
 Route::resource('chirps', ChirpController::class)

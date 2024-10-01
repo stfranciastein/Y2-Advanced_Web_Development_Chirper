@@ -26,49 +26,47 @@
                                     <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
                                 @endunless
                             </div>
-                            @if ($chirp->user->is(auth()->user()))
-                                <x-dropdown>
-                                    <x-slot name="trigger">
-                                        <button>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                    </x-slot>
-                                    <x-slot name="content">
-                                        <x-dropdown-link :href="route('chirps.edit', $chirp)">
-                                            {{ __('Edit') }}
-                                        </x-dropdown-link>
-                                        <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
-                                            @csrf
-                                            @method('delete')
-                                        <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
-                                                {{ __('Delete') }}
-                                        </x-dropdown-link>
-                                        </form>
-                                    </x-slot>
-                                </x-dropdown>
-
-                            @else
                             <x-dropdown>
-                                    <x-slot name="trigger">
-                                        <button>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                    </x-slot>
-                                    <x-slot name="content">                                      
-                                        <form method="POST" action="{{ route('user.follow', $chirp->user->id) }}">
-                                            @csrf
-                                            @method('put')
-                                        <x-dropdown-link :href="route('user.follow', $chirp->user->id)">
-                                            {{ _('Follow User')}}
+                            <x-slot name="trigger">
+                                <button>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                            @if ($chirp->user->is(auth()->user()))
+                                <x-dropdown-link :href="route('chirps.edit', $chirp)">
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
+                                    @csrf
+                                    @method('delete')
+                                    <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </form>
+                            @else
+                                @if (!auth()->user()->followings->contains($chirp->user))
+                                    <form method="POST" action="{{ route('profile.follow', $chirp->user) }}">
+                                        @csrf
+                                        <x-dropdown-link :href="route('profile.follow', $chirp->user)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                            {{ __('Follow') }}
                                         </x-dropdown-link>
-                                        </form>
-                                    </x-slot>
-                                </x-dropdown>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('profile.unfollow', $chirp->user) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <x-dropdown-link :href="route('profile.unfollow', $chirp->user)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                            {{ __('Unfollow') }}
+                                        </x-dropdown-link>
+                                    </form>
+                                @endif
                             @endif
+
+                            </x-slot>
+                        </x-dropdown>
                         </div>
                         <p class="mt-4 text-lg text-gray-900">{{ $chirp->message }}</p>
                     </div>

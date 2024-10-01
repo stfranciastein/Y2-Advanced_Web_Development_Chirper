@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User; //This is how follow/unfollow works
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,36 +61,35 @@ class ProfileController extends Controller
 
     /**
      * Follow the user.
-     *
-     * @param $profileId
-     *
      */
-    public function followUser(int $profileId)
+    public function follow(Request $request, User $user): RedirectResponse
     {
-    $user = User::find($profileId);
-    if(! $user) {
-        
-        return redirect()->back()->with('error', 'User does not exist.'); 
-    }
+        $request->user()->followings()->attach($user);
 
-    $user->followers()->attach(auth()->user()->id);
-    return redirect()->back()->with('success', 'Successfully followed the user.');
+        return Redirect::back();
     }
 
     /**
      * Unfollow the user.
-     *
-     * @param $profileId
+     */
+    public function unfollow(Request $request, User $user): RedirectResponse
+    {
+        $request->user()->followings()->detach($user);
+
+        return Redirect::back();
+    }
+
+    /**
+     * Show the user details page.
+     * @param int $userId
      *
      */
-    public function unFollowUser(int $profileId)
+    public function show(int $userId)
     {
-    $user = User::find($profileId);
-    if(! $user) {
-        
-        return redirect()->back()->with('error', 'User does not exist.'); 
+        $user = User::find($userId);
+        $followers = $user->followers;
+        $followings = $user->followings;
+        return view('user.show', compact('user', 'followers' , 'followings'));
     }
-    $user->followers()->detach(auth()->user()->id);
-    return redirect()->back()->with('success', 'Successfully unfollowed the user.');
-    }
+    
 }
