@@ -14,6 +14,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            backgroundImage: {
+                'full-background': "url('/images/shadowtheedgehog.jpg')",
+            }
         },
     },
 
