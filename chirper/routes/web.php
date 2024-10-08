@@ -20,13 +20,13 @@ Route::middleware('auth')->group(function () {
     // $route->post('/{profileId}/unfollow', 'ProfileController@unFollowUser')->name('user.unfollow');
     Route::post('/profile/follow/{user}', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::delete('/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
-
+    //Following Page
+    Route::get('/followings', [ProfileController::class, 'followings'])->name('followings.index');
 });
 
 Route::resource('chirps', ChirpController::class)
 ->only(['index', 'store', 'edit', 'update', 'destroy', 'follow', 'unfollow'])
 ->middleware(['auth', 'verified']);
-
 
 
 require __DIR__.'/auth.php';

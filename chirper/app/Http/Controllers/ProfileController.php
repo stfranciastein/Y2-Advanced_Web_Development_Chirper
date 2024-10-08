@@ -92,4 +92,13 @@ class ProfileController extends Controller
         return view('user.show', compact('user', 'followers' , 'followings'));
     }
     
+    /**
+     * Display a listing of the resource
+     */
+    public function followings(Request $request): View
+    {
+        return view('following.index', [
+            'followings' => $request->user()->followings,
+        ]);
+    }
 }
