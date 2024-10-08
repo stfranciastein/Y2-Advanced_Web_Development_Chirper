@@ -34,14 +34,30 @@ class ChirpController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $request->validate([
             'message' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
- 
-        $request->user()->chirps()->create($validated);
- 
+    
+        // Create new Chirp instance
+        $chirp = new Chirp();
+        $chirp->message = $request->message;
+        $chirp->user_id = auth()->id();
+    
+        // If the image is present, handle its upload
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $chirp->image = 'images/'.$imageName;
+        }
+    
+        // Save the chirp to the database
+        $chirp->save();
+    
         return redirect(route('chirps.index'));
     }
+    
+ 
 
     /**
      * Display the specified resource.
